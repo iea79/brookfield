@@ -1,0 +1,940 @@
+/*
+//  ==========================
+//  Evgeniy Ivanov
+//  Email: busforward@gmail.com
+//  Skype: ivanov_ea
+//  ==========================
+ */
+
+// Compass extention 
+@import 'compass/css3';
+
+// Global variables
+// ========================================================================
+
+$footer_height: 								50px;
+$grid_padding:									30px;
+
+$color_primary: 								#005789;
+$color_primary_hover: 							#006aa7;
+$color_success: 								#c73b3b;
+$color_danger: 									#b10f16;
+$color_gray: 									#f7f7f7;
+$color_gray_active: 							#e6e6e6;
+
+// Breakpoints 
+// ================================================================
+$breakpoint-small:                               480px !default;
+$breakpoint-medium:                              760px !default;
+$breakpoint-large:                               960px !default;
+$breakpoint-xlarge:                              1200px !default;
+
+$breakpoint-mini-max:                            ($breakpoint-small - 1) !default;
+$breakpoint-small-max:                           ($breakpoint-medium - 1) !default;
+$breakpoint-medium-max:                          ($breakpoint-large - 1) !default;
+$breakpoint-large-max:                           ($breakpoint-xlarge - 1) !default;
+
+
+
+
+// Fonts
+@import 'https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700';
+@import 'https://fonts.googleapis.com/css?family=Roboto+Slab:700&subset=cyrillic';
+
+$main_font_family:								Open Sans, sans-serif;
+$roboto_font:									'Roboto Slab', serif;
+
+// Example - @extend %f_bold;
+%f_bold {
+	font-weight: 600;
+}
+%f_normal {
+	font-weight: 400;
+}
+%f_light {
+	font-weight: 300;
+}
+
+// Elements color ==========================================================
+// Example for button 
+// --------------------------
+// for html - btn__primary, btn__success etc...
+// --------------------------
+// for scss 
+// .btn{
+// 	@each $status, $color in $el_bg_colors {
+// 		&__#{$status} {
+// 			background: $color;
+// 		}
+// 	}
+// }
+$el-bg-colors: (
+	primary: $color_primary, // color for .element__primary
+	success: $color_success, // color for .element__success
+	danger: $color_danger, // color for .element__danger
+);
+
+$el_default_bg_color:							transparent;
+$el_default_bg_color_hover:						$color_primary;
+
+$btn_default_text_color:                        #000;
+$btn_contrast_text_color:                        #fff;
+
+
+// Mixin =======================================================================
+
+// Style for columns text 
+// Используется для многоколоночного адаптивного текста, а также для списков
+// $width - минимальная ширина колонок
+// $count - количество колонок (при уменьшении экрана меняются автоматически в зависимости от первого значения)
+// $padding - отступ между колонками
+// $divider_widh - ширина разделительной линии между колонками
+// $divider_line - стиль разделительной линии 
+// $divider_color - цвет разделительной линии 
+// Лишнее можно просто закомментировать
+// ---------------------------------
+// Example for html 
+// div class="column"
+// ---------------------------------
+// Example for scss 
+// .column {
+// 	@include columns-text(300px, 3, 40px, 1px, solid, #000);
+// }
+@mixin columns-text($width, $count, $padding, $divider_widh, $divider_line, $divider_color) {
+	@include columns($width $count); // Count and width or columns
+	@include column-gap($padding); // Padding for columns
+	@include column-rule($divider_widh $divider_line $divider_color); // Divider for columns
+}
+
+
+// Float el clear
+%clear_a {
+	&:after {
+		content: '';
+		display: table;
+		clear: both;
+	}
+}
+
+%clear_b {
+	&:before {
+		content: '';
+		display: table;
+		clear: both;
+	}
+}
+
+%clear_all {
+	@extend %clear_a;
+	@extend %clear_b;
+}
+
+// Transition speed for element
+@mixin trs($trs_speed) {
+	@include transition(all $trs_speed);
+}
+
+
+// Placeholder for input
+@mixin placeholder {
+  ::-webkit-input-placeholder {@content}
+  :-moz-placeholder           {@content}
+  ::-moz-placeholder          {@content}
+  :-ms-input-placeholder      {@content}  
+}
+
+
+// End @mixin and variables
+
+// ========================================================================
+// Main styles
+// ========================================================================
+.fl__left {
+	float: left;
+}
+
+.fl__right {
+	float: right;
+}
+
+.form__row,.row {
+	@extend %clear_a;
+	&+* {
+		margin-top: 15px;
+	}
+}
+
+// Reset brouser styles
+// -------------------------------------------------------
+* {
+	margin: 0;
+	padding: 0;
+	@include box-sizing(border-box);
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
+	display: block;
+}
+
+html,body,.wrapper {
+	height: 100%;
+	position: relative;
+	@include box-sizing(content-box);
+}
+
+body { 
+	font: 14px/18px $main_font_family;
+	color: black;
+}
+
+input, textarea {
+	outline: 0;
+}
+
+a {
+	text-decoration: none;
+	outline: 0;
+	&:hover {
+		text-decoration: underline;
+	}
+	&:focus {
+		outline: 0;
+	}
+}
+
+ol,ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.list {
+	margin-top: 25px;
+	margin-bottom: 25px;
+	&>* {
+		line-height: 18px;
+		padding-left: 15px;
+		&:before {
+			content: '·';
+			font-size: 30px;
+			display: inline-block;
+			vertical-align: sub;
+			margin-right: 5px;
+			margin-left: -14px;;
+		}
+		&+* {
+			padding-top: 13px;
+		}
+	}
+}
+
+p {
+	padding: 0;
+	margin: 0;
+	line-height: 1.6;
+	&+p {
+		margin-top: 22px;
+	}
+}
+
+img {
+	max-width: 100%;
+	border: none;
+	&.fl__left { // Для картинок с обтекание внутри основного контента сайта
+		margin-top: 2px;
+		margin-right: 29px;
+		margin-bottom: 20px;
+	}
+	&.fl__right { // Для картинок с обтекание внутри основного контента сайта
+		margin-top: 14px;
+		margin-bottom: 20px;
+		margin-left: 29px;
+	}
+}
+
+// Main wrappers
+// -------------------------------------------------------
+.wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto (-$footer_height) auto;
+    min-width: 1200px; // отрицательный нижний отступ на высоту футера
+}
+
+.container_center {
+	padding: 0 15px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 1200px;
+	position: relative;
+}
+
+// Input text and textarea
+// -------------------------------------------------------
+input:not([type]),
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=url],
+input[type=search],
+input[type=tel],
+input[type=number],
+input[type=datetime], 
+textarea {
+	background-color: white;
+	border: 1px solid #ccc;
+	padding: 6px 15px;
+	outline: none;
+	font-size: 16px;
+	font-weight: 300;
+	font-family: $main_font_family;
+	@include border-radius(5px);
+	@include trs(0.3s);
+	&:hover {
+	}
+	&:focus {
+		border: 1px solid #bebebe;
+		background-color: #f6f6f6;
+		@include placeholder {
+			color: red;
+		}
+	}
+	&.input_error {
+		background-color: #fff0f0;
+		border: 1px solid red;
+	}
+	// Placeholder for input +++++++++++++++
+	@include placeholder {
+		color: #b3b3b3;
+	}
+}
+
+input[type=search]::-webkit-search-cancel-button,
+input[type=search]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    height: auto;
+}
+
+// Input checkbox and radio
+// -------------------------------------------------------
+input[type=checkbox],
+input[type=radio] {
+	padding: 0;
+}
+
+input[type=checkbox]:not(:disabled),
+input[type=radio]:not(:disabled) {
+    cursor: pointer;
+}
+
+input[type=checkbox],
+input[type=radio] {
+    display: inline-block;
+    height: 14px;
+    width: 14px;
+    border: 1px solid #000;
+    overflow: hidden;
+    margin-top: -4px;
+    vertical-align: middle;
+    -webkit-appearance: none;
+    outline: 0;
+    background: 0 0;
+    text-align: center;
+    position: relative;
+}
+
+input[type=radio] {
+    border-radius: 50%;
+}
+
+input[type=checkbox]:before,
+input[type=radio]:before {
+    display: block;
+}
+
+input[type=radio]:checked:before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    top: 50%;
+    left: 50%;
+    margin-top: -3px;
+    margin-left: -3px;
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    background: $color_primary;
+}
+
+input[type=checkbox]:checked:before,
+input[type=checkbox]:indeterminate:before {
+    content: "\2714";
+    font-size: 12px;
+    -webkit-font-smoothing: antialiased;
+    text-align: center;
+    line-height: 13px;
+    color: $color_primary;
+}
+
+input[type=checkbox]:indeterminate:before {
+    content: "\f068";
+}
+
+input[type=checkbox]:disabled,
+input[type=radio]:disabled {
+    border-color: #ddd;
+}
+
+input[type=radio]:disabled:checked:before {
+    background-color: #aaa;
+}
+
+input[type=checkbox]:disabled:checked:before,
+input[type=checkbox]:disabled:indeterminate:before {
+    color: #aaa;
+}
+
+.error {
+	color: red;
+}
+
+// Style for button and pseudo button for input and link
+// -------------------------------------------------------
+.btn {
+	color: $btn_default_text_color;
+	font-family: $main_font_family;
+	font-size: 14px;
+	font-weight: 300;
+	padding: 5px 15px 7px;
+	border: 1px solid $btn_default_text_color;
+	outline: none;
+	text-decoration: none;
+	display: inline-block;
+	background-color: $el_default_bg_color;
+	text-align: center;
+	max-width: 100%;
+	cursor: pointer;
+	min-width: 160px;
+	@include border-radius(17px);
+	@include trs(0.3s);
+	&:hover {
+		background-color: $el_default_bg_color_hover;
+		color: $btn_contrast_text_color;
+		border: 1px solid $el_default_bg_color_hover;
+		text-decoration: none;
+	}
+	@each $status_el, $color_el_bg in $el_bg_colors {
+		&__#{$status_el} {
+			background: $color_el_bg;
+			color: $btn_contrast_text_color;
+			border: 1px solid $color_el_bg;
+			&:hover {
+				background: $color_el_bg + #333333;
+				border: 1px solid $color_el_bg + #333333;
+			}
+		}
+	}	
+}
+
+// Grid
+// -------------------------------------------------------
+.grid {
+	margin-left: -$grid_padding;
+	@extend %clear_all;
+	&__wrapper {
+		padding-left: $grid_padding;
+		padding-bottom: $grid_padding;
+		float: left;
+	}
+	&__item {
+
+	}
+	&__1 {
+		.grid__wrapper {		
+			width: 100%;
+		}
+	}
+	&__2 {
+		.grid__wrapper {		
+			width: 50%;
+		}
+	}
+	&__3 {
+		.grid__wrapper {		
+			width: 33.333%;
+		}
+	}
+	&__4 {
+		.grid__wrapper {		
+			width: 25%;
+		}
+	}
+	&__5 {
+		.grid__wrapper {		
+			width: 20%;
+		}
+	}
+}
+
+// Style for columns text
+// ----------------------------------------------------------
+.column {
+	@include columns-text(300px, 3, 40px, 0px, solid, #000);
+}
+
+// Social link
+// ----------------------------------------------------------
+.soc {
+	float: left;
+	a {
+		display: inline-block;
+		width: 30px;
+		height: 30px;
+		@include border-radius(50%);
+		background-color: #000;
+		text-align: center;
+		text-decoration: none;
+		@include trs(0.3s);
+		&:hover {
+			opacity: .8;
+		}
+		&:before {
+			content: 'soc';
+			color: #fff;
+			text-decoration: none;
+		}
+	}
+}
+
+
+/* Header
+ ----------------------------------------------------------------------------- */
+.header {
+	@extend %clear_a;
+}
+
+.logo {
+}
+.header_top {
+	padding-bottom: 11px;
+	a {
+		display: inline-block;
+	}
+	.logo {
+		float: left;
+		margin-top: 23px;		
+	}
+	.logo_brookfield {
+		margin-top: 3px;
+		margin-left: 43px;
+	}
+	.header_top_tel {
+		float: right;
+		color: black;
+		font-size: 24px;
+		font-weight: 400;
+		margin-top: 36px;
+	}
+}
+
+// stiky menu
+.stiky {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+
+/* Navbar
+-------------------------------------------------------------------------------*/
+.header_nav {
+	background-color: $color_primary;
+	border: 1px solid white;
+	.navbar {
+		display: table;
+		width: 100%;
+		&__item {
+			display: table-cell;
+			text-align: center;
+			position: relative;
+			border-left: 1px solid #fff;
+			border-right: 1px solid #fff;
+			min-width: 150px;
+			&:nth-child(n+2) {
+				border-left: none;
+			}
+			&_catalog {
+				width: 200px;
+				background-color: $color_danger;
+				.navbar__link {
+					padding-right: 35px;
+					padding-left: 35px;
+					// white-space: nowrap;
+					&:before,&:after {
+						display: inline-block;
+						// position: absolute;
+					}
+					&:before {
+						content: image-url('burger.png');
+						float: left;
+					}
+					&:after {
+						content: image-url('carret.png');
+						float: right;
+						@include trs(.3s);
+						@include transform(rotate(-90deg));
+					}
+					&:hover {
+						background-color: #ed2a31;
+					}
+				}
+				&:hover {
+					background-color: $color_danger !important;
+				}
+				&.open {
+					.navbar__drop {
+						// display: block;
+						height: auto;
+						// top: 39px;
+						&_link {
+							padding: 15px 26px 12px 35px
+						}
+					}
+					.navbar__link {
+						&:after {
+							@include transform(rotate(0deg));
+						}
+					}
+				}
+			}
+		}
+		&__link {
+			display: block;
+			color: #fff;
+			font-size: 14px;
+			font-weight: 600;
+			text-transform: uppercase;
+			padding: 10px 20px;
+			@include trs(.3s);
+			&:hover {
+				background-color: $color_primary_hover;
+				text-decoration: none;
+			}
+		}
+		&__drop {
+			// display: none;
+			position: absolute;
+			overflow: hidden;
+			height: 0;
+			width: 304px;
+			z-index: 100;
+			left: -1px;
+			text-align: left;
+			// top: 0;
+			@include trs(.3s);
+			&_item {
+				background-color: #fff;
+				&:hover {
+					background-color: $color_gray;
+				}
+			}
+			&_link {
+				display: block;
+				padding: 0 26px 0 36px;
+				color: #666;
+				overflow: hidden;
+				@include trs(.3s);
+				&:hover {
+					text-decoration: none;
+				}
+			}
+		}
+	}
+}
+
+// Breadcrumb ==================================================================
+.breadcrumb {
+	margin-bottom: 15px;
+	li {
+		display: inline-block;
+		vertical-align: baseline;
+		&:not(:first-child) {
+			&:before {
+				content: '/';
+				display: inline-block;
+				color: #999;
+			}
+		}
+		&:last-child {
+			a {
+				cursor: default;
+				text-decoration: none;
+			}
+		}
+		
+		a {
+			color: #999;
+			font-size: 12px;
+			font-weight: 600;
+		}
+	}
+}
+
+// Pagination ==================================================================
+.pagination {
+	li {
+		display: inline-block;
+		a {
+			display: block;
+			text-align: center;
+		}
+		&.prev, &.next {
+			a {
+				&:before {					
+				}
+			}
+		}
+		&.prev {
+			a {
+				&:before {
+					content: '<';
+					
+				}
+			}
+		}
+		&.next {
+			a {
+				&:before {
+					content: '>';
+					
+				}
+			}
+		}
+	}
+}
+
+/* Middle
+ ----------------------------------------------------------------------------- */
+.main__content {
+	padding-bottom: $footer_height;
+	@extend %clear_a;
+}
+.page__container {
+	padding-top: 33px;
+	padding-bottom: 76px;
+	overflow: hidden;
+}
+.title_page {
+	color: black;
+	font-family: $main_font_family;
+	font-size: 36px;
+	font-weight: 300;
+	margin-bottom: 35px;
+	line-height: 40px;
+}
+.sidebar {
+	float: right;
+	width: 270px;
+	margin-top: 38px;
+	margin-left: 30px;
+	.sidebar__list {
+		li {
+			a {
+				display: block;
+				padding: 15px 30px;
+				color: black;
+				background-color: $color_gray;
+				border: 1px solid $color_gray_active;
+				line-height: 1.5;
+				@include trs(.3s);
+				&:hover {
+					background-color: #fff;
+					text-decoration: none;
+				}
+				&.active {
+					background-color: $color_gray_active;
+					cursor: default;
+				}
+			}
+			&:nth-child(n+2) {
+				a {
+					border-top: none;
+				}
+			}
+		}
+	}
+}
+
+// Home page
+// -----------------------------------------------
+.top_slider_form {
+	position: absolute;
+	z-index: 100;
+	top: 39px;
+	right: 13px;
+	color: #fff;
+	width: 370px;
+	background-color: rgba(0, 87, 137, 0.9);
+	padding: 36px 55px 46px;
+	font-size: 16px;
+	.top_slider_form_legend {
+		margin-bottom: 29px;
+	}
+	.form__row { 
+		&+.form__row {
+			margin-top: 27px;
+		}
+	}
+	input {
+		background-color: transparent !important;
+		border: none !important;
+		border-bottom: 1px solid #fff !important;
+		width: 100%;
+		color: #fff;
+		padding: 5px 21px;	
+		font-size: 16px;
+		@include border-radius(0);
+	}
+	.btn {
+		padding: 8px;
+		font-size: 16px;
+		font-weight: 600;
+		width: 100%;
+		@include border-radius(20px);
+		@include box-shadow(3.8px 7.1px 8px rgba(0, 47, 82, 0.27));
+		margin: 5px 0 0;
+	}
+	@include placeholder {
+		color: #fff;
+	}
+}
+
+.home_content {
+	@extend %clear_a;
+	.home_content_slider {
+		width: 370px;
+		float: left;
+		background-color: $color_gray;
+		padding: 35px 49px 36px;
+		&_subtitle {
+			font-weight: 600;
+			line-height: 1.2;
+		}
+		p+p {
+			margin-top: 19px;
+			max-height: 92px;
+			overflow: hidden;
+			margin-bottom: 7px;
+		}
+		.btn {
+			margin-top: 18px;
+		}
+		.slick-dots {
+			margin-top: 20px;
+			li {
+				margin: 0 9px;
+		        &.slick-active {
+		            button {
+		                background-color: $color_primary;
+		            }
+		        }
+			}
+		}
+	}
+	.home_content_slider_item {}
+	.home_content_text {
+		overflow: hidden;
+		padding: 35px 31px 26px;
+	}
+}
+
+// Application page
+// ----------------------------------------------
+.applications {
+	.grid__wrapper {
+		img {
+			display: block;
+			margin-bottom: 29px;
+			width: 337px;
+			height: 240px;
+		}
+	}
+	&__item {
+		padding: 16px 16px 30px;
+		height: 440px;
+		overflow: hidden;
+		border: 1px solid #d9d9d9;
+		text-align: center;
+		@include trs(.3s);
+		&:hover {
+			@include box-shadow(0 3px 13px rgba(0, 0, 0, 0.25));
+		}
+	}
+	&__link {
+		color: $color_primary;
+		font-size: 18px;
+		font-weight: 700;
+		height: 43px;
+		margin-bottom: 42px;
+		display: block;
+		text-align: left;
+		line-height: 1.2;
+		overflow: hidden;
+	}
+	.btn {
+		padding: 9px;
+		width: 187px;
+		@include border-radius(20px);
+	}
+}
+
+/* Footer
+ ----------------------------------------------------------------------------- */
+.footer {
+	position: relative;
+	height: $footer_height;
+	background-color: $color_primary;
+	@extend %clear_all;
+	min-width: 1200px;
+	.container_center {
+		padding-top: 17px;
+		padding-bottom: 10px;
+		* {
+			color: #fff;
+		}
+	}
+	.copy {
+		text-transform: uppercase;
+	}
+	.terms {
+		float: right;
+	}
+}
+
+/* Responsive styles
+----------------------------------------------------------------------------- */
+// max-width: 1200px ===========================================================
+@media (max-width: 1200px) {
+}
+
+// max-width: 960px ===========================================================
+@media (max-width: 960px) {
+	
+}
+
+// max-width: 760px ===========================================================
+@media (max-width: 760px) {
+	
+}
+
+// max-width: 480px ===========================================================
+@media (max-width: 480px) {
+	
+}
+
+
