@@ -77,4 +77,12 @@ $(document).ready(function() {
 		slidesToScroll: 1,
     })
 
+    $('.sidebar_slider').slick({
+    	dots: true,
+    	arrows: false,
+		infinite: true,
+		slidesToShow: 1,
+		slidesToScroll: 1,
+    })
+
 });
