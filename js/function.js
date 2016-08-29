@@ -83,6 +83,15 @@ $(document).ready(function() {
 		infinite: true,
 		slidesToShow: 1,
 		slidesToScroll: 1,
-    })
+    });
+
+    $("#fancy").fancybox();
+
+    $('.product_more_box_close').click(function() {
+    	$(this).closest('.product_more_box').removeClass('open');
+    });
+    $('.product_btn').click(function() {
+    	$(this).closest('.product_more_box').addClass('open');
+    });
 
 });
